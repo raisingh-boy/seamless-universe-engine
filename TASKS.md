@@ -1,83 +1,53 @@
-# Seamless Universe — Complete Task Breakdown
+# Seamless Universe — Architecture Tasks
 
-## Priority: Critical (App Doesn't Work Properly)
+База: v13 от AI Studio (Three.js + Bloom постпроцессинг). Физику не трогать.
 
-### Camera & Navigation
-- [ ] Fix zoom (scroll wheel currently doesn't zoom smoothly)
-- [ ] Fix orbit controls (rotation feels unresponsive)
-- [ ] Add navigation buttons (zoom in/out, reset, world switch)
-- [ ] Make pan (right-click drag) work reliably
+## 1. Галактика — 6 рукавов (спиральная структура)
+Ноды не сфера/шар, а спиральная галактика с 6 доменными рукавами.
+- body=0°, science=60°, philosophy=120°, cognition=180°, movement=240°, hybrid=300°
+- macro → центр, micro → периферия
+- Поле (FIELD) — диск
+- Мой мир (ME) — орбиты вокруг central-me
 
-### WebGL Renderer Fixes
-- [ ] Debug why camera projection makes nodes look flat (not 3D)
-- [ ] Increase node size for visibility
-- [ ] Make glow bigger and brighter
-- [ ] Add depth fog for 3D feel
-- [ ] Fix label positioning (text detaches from nodes)
-- [ ] Make labels fade with distance + always face camera
+## 2. AI через плюсик
+- Убрать кнопку 🧠 (сейчас = IDEAS режим)
+- AI живёт внутри AddSenseModal: две вкладки "Мост" (связь) + "Предложить" (AI генерация)
+- Бэкенд: nginx /api/ → localhost:3001 → Ollama / Gemini
+- Fallback если AI грузится (ответ < 1с вместо 15с)
+- Keep-alive каждые 2 мин
 
-### Physics Stability
-- [ ] Reduce chaos on startup (nodes fly apart before settling)
-- [ ] Make spiral galaxy layout visible from the start
-- [ ] Add smooth transition from initial positions to physics-stable positions
+## 3. Вводный тур (вместо ghost нод)
+- При первом входе: 5-6 временных нод-подсказок
+- "Добавь свою мысль" → "Свяжи" → "Вот результат"
+- Исчезают при первом действии пользователя
+- Подсказки / уведомления можно закрыть (крестик)
+- Не больше 3 рекомендаций на экране
 
-## Priority: High (Core Features Missing)
+## 4. Аудиоплеер — 3 состояния
+- Collapsed: иконка (paused)
+- Mini-bar: полоска с названием (playing)
+- Full: прогресс-бар + плейлист + громкость
+- Плавная анимация между состояниями
+- AudioContext по первому жесту
 
-### Audio Player
-- [ ] Rebuild 3-state audio player (collapsed → mini-bar → full)
-- [ ] Fix audio not playing (AudioContext blocked on mobile)
-- [ ] Add playlist support
-- [ ] Connect to real audio files
+## 5. Mobile — всё адаптировано
+- Footer: fixed bottom-0 (сейчас relative)
+- Кнопки не обрезаются
+- Все модалки/оверлеи на весь экран
+- Жесты: тап, свайп, долгий тап
 
-### AI Integration
-- [ ] Connect backend to Gemini API instead of Ollama
-- [ ] Fix Gemini quota issue (billing setup)
-- [ ] Make AI respond in context of selected node
-- [ ] Allow AI to highlight/navigate to nodes
+## 6. Цвета + размеры нод
+- Domain → цвет (body/amber, science/blue, philosophy/purple и т.д.)
+- Status → размер + прозрачность (rooted > active > seedling > seed)
+- Level → размер (macro > meso > micro)
+- Decay: полевые ноды угасают через 30 дней
 
-### UI / UX
-- [ ] Fix "menus cut off" issue on mobile
-- [ ] Make plus (+) button show cards consistently
-- [ ] Implement long-press radial menu
-- [ ] Add navigation hints layer (tutorial overlay)
+## 7. Монохром / Cinematic (уже есть в v13, проверить что работает)
+- Colour → Mono → Cinematic
+- Cinematic: всё полупрозрачное, проявляется при наведении
 
-## Priority: Medium (New Features)
-
-### Personal Universe Generator
-- [ ] Add "+ Universe" button in Personal Universe
-- [ ] Support uploading: text, PDF, YouTube, audio, article
-- [ ] Backend endpoint: POST /api/generate-universe
-- [ ] Backend: POST /api/compare-universe (cross-reference with Atlas)
-
-### Social Features
-- [ ] User profiles show "Universes" instead of posts
-- [ ] Auto-detect connections between user universes
-- [ ] "27 people study similar connections" — social discovery
-- [ ] Follow / resonate / carry mechanics
-
-### Gamification
-- [ ] Achievement system
-- [ ] Streaks for daily exploration
-- [ ] Points for resonating, connecting nodes
-- [ ] Visual progression (node evolves as you engage)
-
-### Visual Polish
-- [ ] Spiral galaxy arm labels (domain names)
-- [ ] Timeline slider / epoch navigation
-- [ ] Stars background with twinkling
-- [ ] node color by domain + status
-- [ ] Edge animations (signal pulses)
-
-## Priority: Low (Future)
-
-### Performance
-- [ ] LOD (level of detail) — fewer nodes at distance
-- [ ] Reduce bundle size further
-- [ ] Mobile GPU optimization
-- [ ] Memory leak checks
-
-### Platform
-- [ ] PWA support (offline mode)
-- [ ] iOS / Android webview wrappers
-- [ ] Push notifications
-
+## 8. Ноды со своей вселенной (+ Universe)
+- Кнопка "+ Universe" в Personal Universe
+- Загрузка текста / PDF / YouTube / аудио
+- AI генерирует подграф из источника
+- Авто-пересечения между вселенными
