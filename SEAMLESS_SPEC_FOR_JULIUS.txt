@@ -1,6 +1,6 @@
 # SEAMLESS UNIVERSE — ПОЛНЫЙ СПЕК ДЛЯ РЕАЛИЗАЦИИ
 
-## Архитектура продукта, UI, механики, бэкенд, данные
+## Архитектура продукта, UI, механики, данные
 ### Без физики — только то, что вокруг 3D-движка
 
 ============================================================
@@ -234,24 +234,32 @@ Google Sign-In.
 - resonances: string[] (какие концепции резонируют)
 
 ============================================================
-## 5. БЭКЕНД
+## 5. БЭКЕНД (УЖЕ ЕСТЬ — ТОЛЬКО КОННЕКТ)
 ============================================================
 
-### API Endpoints
+### Бэкенд уже развёрнут и работает
+Не нужно строить новый. Всё уже есть на сервере.
+
+Express сервер на localhost:3001
+PostgreSQL с 402 концепциями
+Ollama qwen2.5:3b на порту 11434
+nginx прокси: /api/ → localhost:3001
+
+### API эндпоинты (все работают)
 
 POST /api/chat
   Body: { message, language, context? }
-  Response: { reply, model, note? }
+  Response: { reply: string, model: "qwen2.5:3b"|"fallback", note?: "AI model loading, using fallback" }
 
 GET /api/nodes
   Query: ?world=atlas&domain=body&level=macro
-  Response: { nodes }
+  Response: { nodes: Concept[] }
 
 GET /api/edges
-  Response: { edges }
+  Response: { edges: Flow[] }
 
 POST /api/node
-  Body: Concept data
+  Body: Concept data (nameRu, nameEn, domain, etc.)
   Response: { id, createdAt }
 
 POST /api/edge
@@ -260,26 +268,28 @@ POST /api/edge
 
 POST /api/resonate
   Body: { nodeId }
-  Response: { resonances, newStatus? }
+  Response: { resonances: number, newStatus?: string }
 
 POST /api/carry
   Body: { nodeId }
-  Response: { ok }
+  Response: { ok: true }
 
 GET /api/stories?nodeId=X
+  Response: { stories: Story[] }
+
 POST /api/story
-  Body: Story data
+  Body: { flowId, titleRu, titleEn, textRu, textEn, figureA?, figureB?, year? }
+  Response: { id }
 
 GET /api/recordings
 GET /api/recordings/:id
-  Response: Recording with timeline
+  Response: Recording with timeline array
 
-### Текущая инфраструктура
-- Express на localhost:3001
-- PostgreSQL с нодами
-- Ollama qwen2.5:3b на порту 11434
-- Nginx proxy_pass /api/ → localhost:3001
-- Fallback ответ пока модель грузится (~15 сек холодный старт)
+### Что нужно знать Julius:
+- Все запросы идут на /api/ (nginx проксирует)
+- AI запросы: POST /api/chat — при холодном старте Ollama (~15 сек) возвращается fallback-ответ
+- Статика концепций лежит в БД PostgreSQL
+- Для новых field-концепций: POST /api/node
 
 ============================================================
 ## 6. МЕХАНИКИ
@@ -342,7 +352,7 @@ Frontend:
 
 Данные:
 - localStorage для: голоса, коллекция, язык, сессия, онбординг
-- Статика в ts-файлах (nodes, edges)
+- Статика концепций и связей — НЕ в ts-файлах, а через API (GET /api/nodes, GET /api/edges)
 - Будущее: Supabase для field-данных пользователей
 
 Производительность:
@@ -408,7 +418,7 @@ Frontend:
 - Фильтры (поиск, домен, эпоха, слои, overlay)
 - Радиальное меню
 - Vibe Mode
-- Данные из статических файлов (170 концепций, 60+ связей)
+- Данные через API
 
 ### Sprint 2 — Контент и аудио
 - Аудиоплеер с timeline бусинами
