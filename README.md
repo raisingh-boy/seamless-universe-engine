@@ -1,36 +1,20 @@
-# Seamless Universe
+# Seamless Universe — Living Field Engine
 
-A 3D knowledge graph exploring connections between somatic practices, science, philosophy, cognition, movement, and performance.
+3D knowledge graph exploring connections between somatic practices, science, philosophy, cognition, movement, and performance.
 
-## Architecture
+## Stack
+- React 18 + TypeScript + Vite
+- Three.js + React Three Fiber + drei
+- Tailwind CSS + Lucide icons
 
-- **Frontend**: React + TypeScript + Vite + WebGL2 (custom engine from Claude)
-- **Backend**: Node.js + Express + PostgreSQL
-- **AI**: Uses Ollama (qwen2.5:3b) with fallback; Gemini 2.0 Flash pre-configured
+## Core Concept
+Living ecosystem, not a graph. No lines between nodes — only particle flows.
+Each connection is a river delta: branching, meandering, growing, responding.
 
-## Structure
+## Spec Documents
+- `SEAMLESS_LIVING_FIELD_ENGINE.md` — Full product spec (16 sections)
+- `FRACTAL_RIVER_ENGINE.md` — River delta connection engine spec
+- `TASKS.md` — Architecture tasks for implementation
 
-```
-src/
-├── engine/          # WebGL2 renderer (custom shaders, camera, physics)
-├── components/      # React components (WebGLGraph, AudioPlayer, AddSenseModal)
-├── api/             # API clients (universeApi, nodeSounds)
-├── data/            # Node/edge data files
-├── types.ts         # TypeScript type definitions
-└── utils.ts         # Shared utilities (epoch helpers)
-```
-
-## Quick Start
-
-```bash
-npm install
-npm run dev
-```
-
-Backend:
-```bash
-cd /root/universe-api
-npm install
-node server.js
-```
-
+## Deploy
+`npm run build` → copy dist/* to /var/www/universe/
